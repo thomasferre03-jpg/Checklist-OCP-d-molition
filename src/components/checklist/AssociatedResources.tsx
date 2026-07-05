@@ -6,10 +6,12 @@ import {
   getResourceDisplayUrl,
   getResourceDownloadUrl,
 } from '@/services/resources'
+import { cleanText } from '@/lib/text'
 import type { AssociatedResource } from '@/types/resource'
 
 interface AssociatedResourcesProps {
   itemId: number
+  staticResources?: AssociatedResource[]
 }
 
 function iconFor(resource: AssociatedResource) {
@@ -25,16 +27,17 @@ function iconFor(resource: AssociatedResource) {
 
 function ResourceCard({ resource }: { resource: AssociatedResource }) {
   const displayUrl = getResourceDisplayUrl(resource)
+  const title = cleanText(resource.title)
 
   if (resource.type === 'image') {
     return (
       <article className="resource-card image-resource">
         <div className="resource-title">
           {iconFor(resource)}
-          <span>{resource.title}</span>
+          <span>{title}</span>
         </div>
         <a href={displayUrl} rel="noreferrer" target="_blank">
-          <img alt={resource.title} src={displayUrl} />
+          <img alt={title} src={displayUrl} />
         </a>
       </article>
     )
@@ -45,7 +48,7 @@ function ResourceCard({ resource }: { resource: AssociatedResource }) {
       <article className="resource-card pdf-resource">
         <div className="resource-title">
           {iconFor(resource)}
-          <span>{resource.title}</span>
+          <span>{title}</span>
         </div>
         <a className="resource-action" download href={getResourceDownloadUrl(resource)}>
           <Download size={15} />
@@ -59,7 +62,7 @@ function ResourceCard({ resource }: { resource: AssociatedResource }) {
     <article className="resource-card link-resource">
       <div className="resource-title">
         {iconFor(resource)}
-        <span>{resource.title}</span>
+        <span>{title}</span>
       </div>
       <a className="resource-action" href={displayUrl} rel="noreferrer" target="_blank">
         <ExternalLink size={15} />
@@ -77,10 +80,11 @@ function messageFromError(error: unknown) {
   return 'Impossible de charger les ressources associées.'
 }
 
-export function AssociatedResources({ itemId }: AssociatedResourcesProps) {
+export function AssociatedResources({ itemId, staticResources = [] }: AssociatedResourcesProps) {
   const [resources, setResources] = useState<AssociatedResource[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const visibleResources = [...staticResources, ...resources]
 
   useEffect(() => {
     let isMounted = true
@@ -113,23 +117,26 @@ export function AssociatedResources({ itemId }: AssociatedResourcesProps) {
     }
   }, [itemId])
 
-  if (isLoading) {
+  if (isLoading && !visibleResources.length) {
     return <div className="empty-panel">Chargement des ressources...</div>
   }
 
-  if (errorMessage) {
+  if (errorMessage && !visibleResources.length) {
     return <div className="resource-error">{errorMessage}</div>
   }
 
-  if (!resources.length) {
+  if (!visibleResources.length) {
     return <div className="empty-panel">Aucune ressource associée.</div>
   }
 
   return (
-    <div className="resource-grid">
-      {resources.map((resource) => (
-        <ResourceCard key={resource.id} resource={resource} />
-      ))}
-    </div>
+    <>
+      {errorMessage ? <div className="resource-warning">Les ressources Supabase n'ont pas pu etre chargees.</div> : null}
+      <div className="resource-grid">
+        {visibleResources.map((resource) => (
+          <ResourceCard key={resource.id} resource={resource} />
+        ))}
+      </div>
+    </>
   )
 }

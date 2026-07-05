@@ -1,4 +1,4 @@
-import { CalendarDays, FileText, X } from 'lucide-react'
+﻿import { CalendarDays, FileText, X } from 'lucide-react'
 
 import { AssociatedResources } from '@/components/checklist/AssociatedResources'
 import { cleanText } from '@/lib/text'
@@ -11,27 +11,25 @@ interface ActionSheetProps {
   onStatusChange: (itemId: number) => void
 }
 
-function deadlineForPhase(phase: string) {
-  const normalizedPhase = cleanText(phase).toLowerCase()
-
-  if (normalizedPhase.includes('lancement')) {
-    return 'A cadrer au lancement du projet'
-  }
-  if (normalizedPhase.includes('preparation') || normalizedPhase.includes('préparation')) {
-    return 'Avant validation de la phase de preparation'
-  }
-  if (normalizedPhase.includes('execution') || normalizedPhase.includes('exécution')) {
-    return 'Avant intervention sur site'
-  }
-  if (normalizedPhase.includes('repli') || normalizedPhase.includes('retour')) {
-    return 'A cloturer apres intervention'
-  }
-
-  return 'A definir selon le planning OCP'
-}
-
 function descriptionFor(item: ChecklistItem) {
   return `Cette action doit etre pilotee dans la phase "${cleanText(item.phase)}". Elle sert a securiser le point "${cleanText(item.action)}", a clarifier le porteur et a conserver les preuves utiles pour le retour d'experience.`
+}
+
+function actionDescriptionFor(item: ChecklistItem) {
+  const description = cleanText(item.description)
+  return description || descriptionFor(item)
+}
+
+function formatDate(value: string) {
+  if (!value) {
+    return 'Echeance a renseigner'
+  }
+
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(`${value}T00:00:00`))
 }
 
 export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionSheetProps) {
@@ -80,7 +78,7 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
             <div className="ocp-sheet-body">
               <section className="sheet-section ocp-sheet-section">
                 <h4>Description de l'action</h4>
-                <p>{descriptionFor(item)}</p>
+                <p>{actionDescriptionFor(item)}</p>
               </section>
 
               <section className="sheet-section ocp-sheet-section">
@@ -102,16 +100,16 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
                   </div>
                   <div className="sheet-field-readonly">
                     <span>Echeance</span>
-                    <strong>{deadlineForPhase(item.phase)}</strong>
+                    <strong>{formatDate(entry.echeance)}</strong>
                   </div>
                 </div>
               </section>
 
               <section className="sheet-section ocp-sheet-section">
                 <h4>
-                  <FileText size={16} /> Ressources associées
+                  <FileText size={16} /> Ressources associÃ©es
                 </h4>
-                <AssociatedResources itemId={item.id} />
+                <AssociatedResources itemId={item.id} staticResources={item.resources} />
               </section>
             </div>
           </>
@@ -120,3 +118,4 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
     </div>
   )
 }
+

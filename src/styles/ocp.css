@@ -804,6 +804,17 @@ body {
   padding: 12px;
 }
 
+.resource-warning {
+  border: 1px solid #f2d395;
+  border-radius: 8px;
+  background: #fff4d8;
+  color: #5a3a00;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+}
+
 .lightbox {
   position: fixed;
   z-index: 9999;
@@ -889,6 +900,7 @@ body {
   }
 
   .ocp-toolbar input[type="text"],
+  .ocp-toolbar input[type="date"],
   .ocp-toolbar select,
   .ocp-phase-progress {
     width: 100%;
@@ -971,10 +983,11 @@ body {
 }
 
 .brand-logo {
-  width: 0;
-  height: 0;
-  opacity: 0;
-  overflow: hidden;
+  width: 148px;
+  max-width: min(148px, 46vw);
+  height: auto;
+  opacity: 1;
+  object-fit: contain;
 }
 
 .brand-chip {
@@ -1174,6 +1187,7 @@ body {
 }
 
 .ocp-toolbar input[type="text"],
+.ocp-toolbar input[type="date"],
 .ocp-toolbar select {
   min-height: 36px;
   border: 1px solid #bcb6aa;
@@ -1551,18 +1565,19 @@ body {
 .checklist-table-shell {
   border: 1px solid #bcb6aa;
   background: #fbfaf6;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 .checklist-table {
-  min-width: 760px;
+  width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 .checklist-table th,
 .checklist-table td {
   border-bottom: 1px solid #d1cabf;
-  padding: 10px 12px;
+  padding: 10px 9px;
   vertical-align: top;
 }
 
@@ -1596,19 +1611,23 @@ body {
 }
 
 .checklist-table .status-col {
-  width: 98px;
+  width: 8%;
 }
 
 .checklist-table .category-col {
-  width: 180px;
+  width: 12%;
 }
 
 .checklist-table .owner-col {
-  width: 190px;
+  width: 14%;
+}
+
+.checklist-table .deadline-col {
+  width: 14%;
 }
 
 .checklist-table .details-col {
-  width: 88px;
+  width: 8%;
 }
 
 .checklist-table .cat-tag {
@@ -1645,9 +1664,10 @@ body {
   color: var(--ocp-red);
 }
 
-.table-owner-input {
+.table-owner-input,
+.table-date-input {
   width: 100%;
-  min-width: 160px;
+  min-width: 0;
   border: 1px solid #bcb6aa;
   border-radius: 0;
   background: #fff;
@@ -1660,6 +1680,19 @@ body {
 .checklist-table .toggle-btn,
 .checklist-table .details-btn {
   margin-top: 0;
+}
+
+.checklist-table .toggle-btn {
+  width: 100%;
+  min-width: 0;
+  justify-content: center;
+  padding-inline: 4px;
+}
+
+.checklist-table .details-btn {
+  width: 100%;
+  justify-content: center;
+  letter-spacing: 0.18em;
 }
 
 @media (max-width: 760px) {
@@ -1700,12 +1733,11 @@ body {
   }
 
   .checklist-table-shell {
-    margin-inline: -16px;
-    border-inline: 0;
+    margin-inline: 0;
   }
 
   .checklist-table {
-    min-width: 720px;
+    min-width: 0;
   }
 
   .sheet-field-grid {

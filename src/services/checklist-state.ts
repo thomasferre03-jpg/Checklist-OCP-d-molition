@@ -12,6 +12,7 @@ interface ChecklistStateRow {
   item_id: number
   statut: ChecklistStatus
   porteur: string | null
+  echeance?: string | null
   photo_path: string | null
   updated_at: string
 }
@@ -35,6 +36,7 @@ function rowToState(row: ChecklistStateRow): ChecklistItemState {
     itemId: row.item_id,
     statut: row.statut,
     porteur: row.porteur ?? '',
+    echeance: row.echeance ?? '',
     photoPath: row.photo_path,
     updatedAt: row.updated_at,
   }
@@ -45,6 +47,7 @@ export function emptyStateFor(itemId: number): ChecklistItemState {
     itemId,
     statut: 'Pas fait',
     porteur: '',
+    echeance: '',
     photoPath: null,
   }
 }
@@ -62,9 +65,7 @@ export async function fetchChecklistState(): Promise<ChecklistStateMap> {
     throw error
   }
 
-  return Object.fromEntries(
-    (data as ChecklistStateRow[]).map((row) => [row.item_id, rowToState(row)]),
-  )
+  return Object.fromEntries((data as ChecklistStateRow[]).map((row) => [row.item_id, rowToState(row)]))
 }
 
 export async function saveChecklistState(entry: ChecklistItemState) {
@@ -87,7 +88,10 @@ export async function saveChecklistState(entry: ChecklistItemState) {
     throw error
   }
 
-  return rowToState(data as ChecklistStateRow)
+  return {
+    ...rowToState(data as ChecklistStateRow),
+    echeance: entry.echeance,
+  }
 }
 
 export function subscribeChecklistState(

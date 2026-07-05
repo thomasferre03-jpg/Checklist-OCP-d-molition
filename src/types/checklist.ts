@@ -1,3 +1,5 @@
+import type { AssociatedResource } from '@/types/resource'
+
 export type ChecklistStatus = 'Fait' | 'Pas fait'
 
 export interface ChecklistItem {
@@ -6,12 +8,15 @@ export interface ChecklistItem {
   categorie: string
   action: string
   bonnePratique: string
+  description: string
+  resources: AssociatedResource[]
 }
 
 export interface ChecklistItemState {
   itemId: number
   statut: ChecklistStatus
   porteur: string
+  echeance: string
   photoPath: string | null
   updatedAt?: string
 }

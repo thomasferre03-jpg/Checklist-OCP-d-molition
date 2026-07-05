@@ -3,10 +3,14 @@ import { cleanText } from '@/lib/text'
 interface ChecklistToolbarProps {
   categories: string[]
   categoryFilter: string
+  deadlineFilter: string
   phaseProgressLabel: string
+  ownerFilter: string
   searchTerm: string
   statusFilter: string
   onCategoryFilterChange: (value: string) => void
+  onDeadlineFilterChange: (value: string) => void
+  onOwnerFilterChange: (value: string) => void
   onSearchTermChange: (value: string) => void
   onStatusFilterChange: (value: string) => void
 }
@@ -14,10 +18,14 @@ interface ChecklistToolbarProps {
 export function ChecklistToolbar({
   categories,
   categoryFilter,
+  deadlineFilter,
   phaseProgressLabel,
+  ownerFilter,
   searchTerm,
   statusFilter,
   onCategoryFilterChange,
+  onDeadlineFilterChange,
+  onOwnerFilterChange,
   onSearchTermChange,
   onStatusFilterChange,
 }: ChecklistToolbarProps) {
@@ -48,6 +56,18 @@ export function ChecklistToolbar({
         <option value="fait">Fait uniquement</option>
         <option value="pasfait">Pas fait uniquement</option>
       </select>
+      <input
+        onChange={(event) => onOwnerFilterChange(event.target.value)}
+        placeholder="Filtrer par porteur..."
+        type="text"
+        value={ownerFilter}
+      />
+      <input
+        aria-label="Filtrer par echeance"
+        onChange={(event) => onDeadlineFilterChange(event.target.value)}
+        type="date"
+        value={deadlineFilter}
+      />
       <div className="ocp-phase-progress">{phaseProgressLabel}</div>
     </div>
   )

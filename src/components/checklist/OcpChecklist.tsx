@@ -26,7 +26,7 @@ const CHECKLIST_ITEMS: ChecklistItem[] = SOURCE_CHECKLIST_ITEMS.map((item, index
 }))
 const PHASES = Array.from(new Set(CHECKLIST_ITEMS.map((item) => item.phase)))
 const CATEGORIES = Array.from(new Set(CHECKLIST_ITEMS.map((item) => item.categorie))).sort()
-const EIFFAGE_LOGO_URL = '/eiffage-genie-civil-logo.png'
+const EIFFAGE_LOGO_URL = `${import.meta.env.BASE_URL}eiffage-genie-civil-logo.png`
 
 function messageFromError(error: unknown) {
   if (error instanceof Error) {
@@ -62,6 +62,8 @@ export function OcpChecklist() {
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('tous')
   const [statusFilter, setStatusFilter] = useState('tous')
+  const [ownerFilter, setOwnerFilter] = useState('')
+  const [deadlineFilter, setDeadlineFilter] = useState('')
   const [toast, setToast] = useState('')
   const [selectedItem, setSelectedItem] = useState<ChecklistItem | null>(null)
   const [isLoading, setIsLoading] = useState(hasSupabaseConfig)
@@ -140,7 +142,13 @@ export function OcpChecklist() {
 
   useEffect(() => {
     return subscribeChecklistState(
-      (entry) => setStateMap((current) => applyStateToMap(current, entry)),
+      (entry) =>
+        setStateMap((current) =>
+          applyStateToMap(current, {
+            ...entry,
+            echeance: entry.echeance || current[entry.itemId]?.echeance || '',
+          }),
+        ),
       (itemId) => {
         setStateMap((current) => {
           const next = { ...current }
@@ -168,6 +176,7 @@ export function OcpChecklist() {
 
   const filteredItems = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase()
+    const normalizedOwner = ownerFilter.trim().toLowerCase()
 
     return CHECKLIST_ITEMS.filter((item) => item.phase === currentPhase).filter((item) => {
       const entry = stateMap[item.id] ?? emptyStateFor(item.id)
@@ -180,6 +189,12 @@ export function OcpChecklist() {
       if (statusFilter === 'pasfait' && entry.statut !== 'Pas fait') {
         return false
       }
+      if (normalizedOwner && !entry.porteur.toLowerCase().includes(normalizedOwner)) {
+        return false
+      }
+      if (deadlineFilter && (!entry.echeance || entry.echeance > deadlineFilter)) {
+        return false
+      }
       if (!normalizedSearch) {
         return true
       }
@@ -188,7 +203,7 @@ export function OcpChecklist() {
         .toLowerCase()
         .includes(normalizedSearch)
     })
-  }, [categoryFilter, currentPhase, searchTerm, stateMap, statusFilter])
+  }, [categoryFilter, currentPhase, deadlineFilter, ownerFilter, searchTerm, stateMap, statusFilter])
 
   const phaseProgressLabel = `Phase en cours - ${currentPhaseStats.done}/${currentPhaseStats.total} actions faites (${currentPhaseStats.pct}%)`
 
@@ -207,6 +222,14 @@ export function OcpChecklist() {
     (itemId: number, porteur: string) => {
       const entry = getEntry(itemId)
       persistEntry({ ...entry, porteur })
+    },
+    [getEntry, persistEntry],
+  )
+
+  const handleDeadlineChange = useCallback(
+    (itemId: number, echeance: string) => {
+      const entry = getEntry(itemId)
+      persistEntry({ ...entry, echeance })
     },
     [getEntry, persistEntry],
   )
@@ -240,7 +263,6 @@ export function OcpChecklist() {
             statsByPhase={statsByPhase}
           />
           <div className="rail-legend mono">
-            <span>Ligne operationnelle - {PHASES.length} stations</span>
             <span className="legend-items">
               <i className="legend-dot todo" /> A traiter
               <i className="legend-dot progress" /> En cours
@@ -252,9 +274,13 @@ export function OcpChecklist() {
         <ChecklistToolbar
           categories={CATEGORIES}
           categoryFilter={categoryFilter}
+          deadlineFilter={deadlineFilter}
           onCategoryFilterChange={setCategoryFilter}
+          onDeadlineFilterChange={setDeadlineFilter}
+          onOwnerFilterChange={setOwnerFilter}
           onSearchTermChange={setSearchTerm}
           onStatusFilterChange={setStatusFilter}
+          ownerFilter={ownerFilter}
           phaseProgressLabel={phaseProgressLabel}
           searchTerm={searchTerm}
           statusFilter={statusFilter}
@@ -288,6 +314,7 @@ export function OcpChecklist() {
             <ChecklistTable
               entriesByItemId={getEntry}
               items={filteredItems}
+              onDeadlineChange={handleDeadlineChange}
               onOpenDetails={setSelectedItem}
               onOwnerChange={handleOwnerChange}
               onToggleStatus={handleToggleStatus}

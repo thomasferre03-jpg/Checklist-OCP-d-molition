@@ -15,6 +15,7 @@ import type { ChecklistItem, ChecklistItemState } from '@/types/checklist'
 interface ChecklistTableProps {
   entriesByItemId: (itemId: number) => ChecklistItemState
   items: ChecklistItem[]
+  onDeadlineChange: (itemId: number, echeance: string) => void
   onOpenDetails: (item: ChecklistItem) => void
   onOwnerChange: (itemId: number, porteur: string) => void
   onToggleStatus: (itemId: number) => void
@@ -59,6 +60,7 @@ function OwnerCell({ entry, itemId, onOwnerChange }: OwnerCellProps) {
 export function ChecklistTable({
   entriesByItemId,
   items,
+  onDeadlineChange,
   onOpenDetails,
   onOwnerChange,
   onToggleStatus,
@@ -72,6 +74,7 @@ export function ChecklistTable({
             <TableHead className="category-col">Categorie</TableHead>
             <TableHead>Action</TableHead>
             <TableHead className="owner-col">Porteur</TableHead>
+            <TableHead className="deadline-col">Echeance</TableHead>
             <TableHead className="details-col">Detail</TableHead>
           </TableRow>
         </TableHeader>
@@ -108,6 +111,15 @@ export function ChecklistTable({
                 </TableCell>
                 <TableCell>
                   <OwnerCell entry={entry} itemId={item.id} onOwnerChange={onOwnerChange} />
+                </TableCell>
+                <TableCell>
+                  <input
+                    aria-label={`Choisir l'echeance de ${cleanText(item.action)}`}
+                    className="table-date-input"
+                    onChange={(event) => onDeadlineChange(item.id, event.target.value)}
+                    type="date"
+                    value={entry.echeance}
+                  />
                 </TableCell>
                 <TableCell>
                   <button className="details-btn" onClick={() => onOpenDetails(item)} type="button">
