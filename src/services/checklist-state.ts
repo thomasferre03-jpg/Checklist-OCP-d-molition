@@ -59,7 +59,7 @@ export async function fetchChecklistState(): Promise<ChecklistStateMap> {
 
   const { data, error } = await supabase
     .from(STATE_TABLE)
-    .select('item_id, statut, porteur, photo_path, updated_at')
+    .select('item_id, statut, porteur, echeance, photo_path, updated_at')
 
   if (error) {
     throw error
@@ -77,21 +77,19 @@ export async function saveChecklistState(entry: ChecklistItemState) {
         item_id: entry.itemId,
         statut: entry.statut,
         porteur: entry.porteur,
+        echeance: entry.echeance || null,
         photo_path: entry.photoPath,
       },
       { onConflict: 'item_id' },
     )
-    .select('item_id, statut, porteur, photo_path, updated_at')
+    .select('item_id, statut, porteur, echeance, photo_path, updated_at')
     .single()
 
   if (error) {
     throw error
   }
 
-  return {
-    ...rowToState(data as ChecklistStateRow),
-    echeance: entry.echeance,
-  }
+  return rowToState(data as ChecklistStateRow)
 }
 
 export function subscribeChecklistState(

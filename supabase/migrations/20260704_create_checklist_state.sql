@@ -2,9 +2,13 @@ create table if not exists public.checklist_item_state (
   item_id integer primary key check (item_id between 1 and 266),
   statut text not null default 'Pas fait' check (statut in ('Fait', 'Pas fait')),
   porteur text not null default '',
+  echeance date,
   photo_path text,
   updated_at timestamptz not null default now()
 );
+
+alter table public.checklist_item_state
+add column if not exists echeance date;
 
 create or replace function public.set_checklist_item_state_updated_at()
 returns trigger

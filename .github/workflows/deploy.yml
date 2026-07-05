@@ -33,6 +33,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm run build
+        env:
+          VITE_SUPABASE_URL: https://dkdclcpvvwcquckuufaj.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_NqOjXZG3i3cvBWarBG5AVA_pKyaw9OX
 
       - uses: actions/configure-pages@v5
 
