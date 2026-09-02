@@ -621,7 +621,7 @@ body {
 
 .sheet-head h3 {
   margin: 8px 0 0;
-  color: var(--ocp-ink);
+  color: inherit;
   font-size: 26px;
   line-height: 1.12;
 }
@@ -1394,7 +1394,7 @@ body {
 }
 
 .sheet-head h3 {
-  color: var(--ocp-ink);
+  color: inherit;
   font-weight: 950;
   text-transform: uppercase;
 }
@@ -1451,9 +1451,9 @@ body {
   color: #df9635;
 }
 
-.ocp-sheet-title {
+.ocp-sheet-header .ocp-sheet-title {
   margin: 12px 0 0;
-  color: #fff;
+  color: #f8f7f2 !important;
   font-size: 27px;
   font-weight: 950;
   letter-spacing: 0;
