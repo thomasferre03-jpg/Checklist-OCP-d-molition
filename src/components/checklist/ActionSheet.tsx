@@ -1,6 +1,7 @@
 ﻿import { CalendarDays, FileText, X } from 'lucide-react'
 
 import { AssociatedResources } from '@/components/checklist/AssociatedResources'
+import { RexInsights } from '@/components/checklist/RexInsights'
 import { cleanText } from '@/lib/text'
 import type { ChecklistItem, ChecklistItemState } from '@/types/checklist'
 
@@ -111,6 +112,8 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
                 </h4>
                 <AssociatedResources itemId={item.id} staticResources={item.resources} />
               </section>
+
+              <RexInsights item={item} />
             </div>
           </>
         ) : null}
