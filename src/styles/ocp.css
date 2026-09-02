@@ -815,6 +815,53 @@ body {
   padding: 10px 12px;
 }
 
+.field-rex-card {
+  border-left: 4px solid var(--ocp-green);
+  background: #f4f6f1;
+  padding: 12px 14px;
+}
+
+.field-rex-category {
+  color: #2f5c40;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.field-rex-card p {
+  color: var(--ocp-ink);
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 0 0 8px;
+}
+
+.field-rex-card p:last-of-type {
+  margin-bottom: 12px;
+}
+
+.field-rex-source {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #b8b2a7;
+  color: var(--ocp-ink);
+  gap: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 7px 9px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.field-rex-source:hover {
+  border-color: var(--ocp-green);
+  color: var(--ocp-green);
+}
+
 .rex-insights {
   border-top: 1px solid #c9c2b7;
   padding-top: 22px;

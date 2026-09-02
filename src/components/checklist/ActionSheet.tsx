@@ -1,6 +1,7 @@
 ﻿import { CalendarDays, FileText, X } from 'lucide-react'
 
 import { AssociatedResources } from '@/components/checklist/AssociatedResources'
+import { FieldRexNotes } from '@/components/checklist/FieldRexNotes'
 import { RexInsights } from '@/components/checklist/RexInsights'
 import { cleanText } from '@/lib/text'
 import type { ChecklistItem, ChecklistItemState } from '@/types/checklist'
@@ -89,6 +90,8 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
                   <span>{cleanText(item.bonnePratique)}</span>
                 </div>
               </section>
+
+              <FieldRexNotes item={item} />
 
               <section className="sheet-section ocp-sheet-section">
                 <h4>
