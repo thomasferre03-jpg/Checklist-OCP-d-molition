@@ -107,7 +107,7 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
 
               <section className="sheet-section ocp-sheet-section">
                 <h4>
-                  <FileText size={16} /> Ressources associÃ©es
+                  <FileText size={16} /> Ressources associées
                 </h4>
                 <AssociatedResources itemId={item.id} staticResources={item.resources} />
               </section>
