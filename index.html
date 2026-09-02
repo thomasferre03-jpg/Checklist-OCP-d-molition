@@ -9,5 +9,26 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      (() => {
+        const isGithubPages = window.location.hostname.endsWith('github.io')
+        const hasDevEntry = document.querySelector('script[src="/src/main.tsx"]')
+
+        if (!isGithubPages || !hasDevEntry) {
+          return
+        }
+
+        const basePath = '/Checklist-OCP-d-molition/'
+        const stylesheet = document.createElement('link')
+        stylesheet.rel = 'stylesheet'
+        stylesheet.href = `${basePath}assets/index-CkTwgrBr.css`
+        document.head.appendChild(stylesheet)
+
+        const appScript = document.createElement('script')
+        appScript.type = 'module'
+        appScript.src = `${basePath}assets/index-9qO6KP1G.js`
+        document.body.appendChild(appScript)
+      })()
+    </script>
   </body>
 </html>
