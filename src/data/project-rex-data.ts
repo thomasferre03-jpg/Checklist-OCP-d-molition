@@ -1,259 +1,229 @@
-export type RexStatus = 'ATTEINT' | 'PARTIEL' | 'NON_ATTEINT' | 'NON_EVALUABLE'
+import financeBeneficeTotal from '@/assets/rex-dashboard/finance-benefice-total.png'
+import financeBeneficesOa from '@/assets/rex-dashboard/finance-benefices-oa.png'
+import financeDepensesRecettesOa from '@/assets/rex-dashboard/finance-depenses-recettes-oa.png'
+import planningDureeExecutionOa from '@/assets/rex-dashboard/planning-duree-execution-oa.png'
+import planningEvenementsRestitution from '@/assets/rex-dashboard/planning-evenements-restitution.png'
+import planningReductionDureeOcp from '@/assets/rex-dashboard/planning-reduction-duree-ocp.png'
+import planningRestitutionSansPenalites from '@/assets/rex-dashboard/planning-restitution-sans-penalites.png'
+import rexCadenceOa41 from '@/assets/rex-dashboard/rex-cadence-oa41.png'
+import rexCadenceOa44 from '@/assets/rex-dashboard/rex-cadence-oa44.png'
+import rexCadenceOa48 from '@/assets/rex-dashboard/rex-cadence-oa48.png'
+import rexCadenceOa54 from '@/assets/rex-dashboard/rex-cadence-oa54.png'
+import rexDureePhasesOa41 from '@/assets/rex-dashboard/rex-duree-phases-oa41.png'
+import rexDureePhasesOa44 from '@/assets/rex-dashboard/rex-duree-phases-oa44.png'
+import rexDureePhasesOa48 from '@/assets/rex-dashboard/rex-duree-phases-oa48.png'
+import rexDureePhasesOa54 from '@/assets/rex-dashboard/rex-duree-phases-oa54.png'
+import rexDureePhasesOa56 from '@/assets/rex-dashboard/rex-duree-phases-oa56.png'
+import securityAccidentsOcp from '@/assets/rex-dashboard/security-accidents-ocp.png'
+import securityAnomaliesMesures from '@/assets/rex-dashboard/security-anomalies-mesures.png'
+import securitySafetyForceOcp from '@/assets/rex-dashboard/security-safety-force-ocp.png'
+import securityValidationLpa from '@/assets/rex-dashboard/security-validation-lpa.png'
 
-export interface RexKpi {
-  label: string
-  value: string
-  detail: string
-  status: RexStatus
+export interface RexVisual {
+  title: string
+  image: string
+  alt: string
 }
 
-export interface RexBarDatum {
+export interface RexVisualGroup {
   label: string
-  value: number
-}
-
-export interface RexTable {
-  columns: string[]
-  rows: string[][]
+  visuals: RexVisual[]
 }
 
 export interface RexInsight {
   summary: string
-  kpis?: RexKpi[]
-  bars?: {
-    title: string
-    unit: string
-    data: RexBarDatum[]
-  }
-  table?: RexTable
-  analysis: string[]
-  unavailable?: string[]
+  visuals?: RexVisual[]
+  groups?: RexVisualGroup[]
 }
 
-export const PROJECT_REX_DATA = {
-  ouvrages: ['OA41', 'OA44', 'OA48', 'OA54', 'OA56'],
-  safety: {
-    accidentsByOa: [
-      { label: 'OA41', value: 0 },
-      { label: 'OA44', value: 0 },
-      { label: 'OA48', value: 0 },
-      { label: 'OA54', value: 0 },
-      { label: 'OA56', value: 0 },
-    ],
-    safetyForcesByOa: [
-      { label: 'OA41', value: 4 },
-      { label: 'OA44', value: 2 },
-      { label: 'OA48', value: 3 },
-      { label: 'OA54', value: 1 },
-      { label: 'OA56', value: 3 },
-    ],
-  },
-  planning: {
-    restitutionsSansPenalite: 5,
-    totalOcp: 5,
-    perturbationEvents: [
-      'Panne pelle',
-      'Panne grue',
-      'Découverte imprévue de réseaux',
-      'Conditions météo défavorables',
-      'Incident sécurité',
-      'Retard livraison fourniture',
-      'Défaillance sous-traitant',
-    ],
-  },
-  finance: {
-    targetGainPercent: 5,
-    targetBenefitEuros: 19848,
-    totalBenefitEuros: 20497.62,
-  },
-} as const
-
-const safetyKpis: RexKpi[] = [
+const securityVisuals: RexVisual[] = [
   {
-    label: 'Accidents',
-    value: '0',
-    detail: 'Nombre d’accidents relevé sur les 5 OCP',
-    status: 'ATTEINT',
+    title: "Nombre d'accidents sur les OCP",
+    image: securityAccidentsOcp,
+    alt: "Graphique du dashboard montrant le nombre d'accidents sur les OCP",
   },
   {
-    label: 'Safety Force',
-    value: '13',
-    detail: 'Fiches sécurité visibles dans le dashboard',
-    status: 'ATTEINT',
+    title: 'Nombre de Safety Force sur les OCP',
+    image: securitySafetyForceOcp,
+    alt: 'Histogramme du dashboard montrant le nombre de Safety Force par OA',
   },
   {
-    label: 'OA suivis',
-    value: '5 / 5',
-    detail: 'OA41, OA44, OA48, OA54, OA56',
-    status: 'ATTEINT',
+    title: 'Anomalies / Mesures à prendre',
+    image: securityAnomaliesMesures,
+    alt: 'Radar du dashboard sur les anomalies et mesures à prendre',
+  },
+  {
+    title: 'Validation LPA',
+    image: securityValidationLpa,
+    alt: 'Histogramme du dashboard sur la validation LPA',
   },
 ]
 
-const planningKpis: RexKpi[] = [
+const planningVisuals: RexVisual[] = [
   {
-    label: 'Restitutions',
-    value: '5 / 5',
-    detail: 'Restitutions des voies sans pénalité',
-    status: 'ATTEINT',
+    title: 'Restitution des voies sans pénalités',
+    image: planningRestitutionSansPenalites,
+    alt: 'Graphique du dashboard sur la restitution des voies sans pénalités',
   },
   {
-    label: 'Délai marché',
-    value: '100 %',
-    detail: 'Conformité de restitution visible dans le dashboard',
-    status: 'ATTEINT',
+    title: 'Réduction de la durée des OCP en %',
+    image: planningReductionDureeOcp,
+    alt: 'Histogramme du dashboard sur la réduction de durée des OCP',
+  },
+  {
+    title: 'Événements impactant la restitution',
+    image: planningEvenementsRestitution,
+    alt: 'Graphique du dashboard sur les événements pouvant impacter la restitution des voies',
+  },
+  {
+    title: "Durée d'exécution des travaux par OA",
+    image: planningDureeExecutionOa,
+    alt: "Histogramme du dashboard comparant durée théorique, durée réelle et marge par OA",
   },
 ]
 
-const financeKpis: RexKpi[] = [
+const financeVisuals: RexVisual[] = [
   {
-    label: 'Bénéfice total',
-    value: '20 497,62 €',
-    detail: 'Bénéfice visible dans le dashboard PFE',
-    status: 'ATTEINT',
+    title: 'Bénéfices sur les OCP de démolition EG3',
+    image: financeBeneficeTotal,
+    alt: 'Graphique du dashboard indiquant le bénéfice total des OCP de démolition EG3',
   },
   {
-    label: 'Objectif',
-    value: '> 19 848 €',
-    detail: 'Seuil associé à l’objectif de gain de 5 %',
-    status: 'ATTEINT',
+    title: 'Dépenses et recettes par OA',
+    image: financeDepensesRecettesOa,
+    alt: 'Histogramme du dashboard comparant dépenses et recettes par OA',
+  },
+  {
+    title: 'Bénéfices par OA',
+    image: financeBeneficesOa,
+    alt: 'Diagramme circulaire du dashboard montrant les bénéfices par OA',
+  },
+]
+
+const lessonsGroups: RexVisualGroup[] = [
+  {
+    label: 'OA41',
+    visuals: [
+      {
+        title: 'Durée par phase : démolition OA41',
+        image: rexDureePhasesOa41,
+        alt: 'Graphique du dashboard sur les durées par phase de démolition OA41',
+      },
+      {
+        title: 'Cadence de démolition OA41',
+        image: rexCadenceOa41,
+        alt: 'Graphique du dashboard sur la cadence de démolition OA41',
+      },
+    ],
+  },
+  {
+    label: 'OA44',
+    visuals: [
+      {
+        title: 'Durée par phase : démolition OA44',
+        image: rexDureePhasesOa44,
+        alt: 'Graphique du dashboard sur les durées par phase de démolition OA44',
+      },
+      {
+        title: 'Cadence de démolition OA44',
+        image: rexCadenceOa44,
+        alt: 'Graphique du dashboard sur la cadence de démolition OA44',
+      },
+    ],
+  },
+  {
+    label: 'OA48',
+    visuals: [
+      {
+        title: 'Durée par phase : démolition OA48',
+        image: rexDureePhasesOa48,
+        alt: 'Graphique du dashboard sur les durées par phase de démolition OA48',
+      },
+      {
+        title: 'Cadence de démolition OA48',
+        image: rexCadenceOa48,
+        alt: 'Graphique du dashboard sur la cadence de démolition OA48',
+      },
+    ],
+  },
+  {
+    label: 'OA54',
+    visuals: [
+      {
+        title: 'Durée par phase : démolition OA54',
+        image: rexDureePhasesOa54,
+        alt: 'Graphique du dashboard sur les durées par phase de démolition OA54',
+      },
+      {
+        title: 'Cadence de démolition OA54',
+        image: rexCadenceOa54,
+        alt: 'Graphique du dashboard sur la cadence de démolition OA54',
+      },
+    ],
+  },
+  {
+    label: 'OA56',
+    visuals: [
+      {
+        title: 'Durée par phase : démolition OA56',
+        image: rexDureePhasesOa56,
+        alt: 'Graphique du dashboard sur les durées par phase de démolition OA56',
+      },
+    ],
   },
 ]
 
 export const PH12_REX_INSIGHTS: Record<string, RexInsight> = {
   'objectifs de sécurité atteints': {
-    summary: 'Le dashboard indique 0 accident sur les OCP suivies.',
-    kpis: safetyKpis,
-    bars: {
-      title: 'Safety Force par OA',
-      unit: 'fiche(s)',
-      data: [...PROJECT_REX_DATA.safety.safetyForcesByOa],
-    },
-    table: {
-      columns: ['OA', 'Accidents', 'Safety Force'],
-      rows: PROJECT_REX_DATA.ouvrages.map((oa) => {
-        const accident = PROJECT_REX_DATA.safety.accidentsByOa.find((item) => item.label === oa)?.value ?? 0
-        const safetyForce = PROJECT_REX_DATA.safety.safetyForcesByOa.find((item) => item.label === oa)?.value ?? 0
-        return [oa, String(accident), String(safetyForce)]
-      }),
-    },
-    analysis: [
-      'L’objectif sécurité est atteint sur l’indicateur accidents.',
-      'Les Safety Force sont concentrées sur OA41, OA48 et OA56, ce qui donne une base utile pour le REX sécurité.',
-      'Les anomalies et mesures à prendre sont visibles dans le dashboard mais ne sont pas encore disponibles comme données structurées dans le code.',
-    ],
+    summary: 'Visuels sécurité réutilisés depuis le dashboard PFE.',
+    visuals: securityVisuals,
   },
   'délais de restitution respectés': {
-    summary: 'Les 5 OCP sont indiquées comme restituées sans pénalité.',
-    kpis: planningKpis,
-    table: {
-      columns: ['Indicateur', 'Résultat', 'Statut'],
-      rows: [
-        ['Restitution sans pénalité', '5 / 5 OCP', 'ATTEINT'],
-        ['Respect délai marché', '100 %', 'ATTEINT'],
-        ['Événements perturbateurs', 'Présents dans le dashboard', 'À analyser'],
-      ],
-    },
-    analysis: [
-      'Le résultat global de restitution est favorable.',
-      'Les événements perturbateurs doivent servir à identifier ce qui a consommé la marge avant restitution.',
-      'Les graphiques durée théorique/réelle par phase sont la source à exploiter pour isoler les tâches critiques.',
-    ],
+    summary: 'Visuels restitution, durée, marge et événements repris du dashboard PFE.',
+    visuals: planningVisuals,
   },
   'objectifs financiers atteints': {
-    summary: 'Le bénéfice visible dans le dashboard dépasse le seuil associé au gain de 5 %.',
-    kpis: financeKpis,
-    table: {
-      columns: ['Objectif', 'Seuil', 'Résultat', 'Statut'],
-      rows: [['Gain financier', '> 19 848 €', '20 497,62 €', 'ATTEINT']],
-    },
-    analysis: [
-      'L’objectif financier global est atteint sur la donnée consolidée disponible.',
-      'Les dépenses et recettes par OA sont visibles dans le dashboard, mais les valeurs exactes doivent être structurées avant d’être réutilisées automatiquement.',
-    ],
+    summary: 'Visuels budget et bénéfices repris du dashboard PFE.',
+    visuals: financeVisuals,
   },
   'validation des kpi du projet': {
-    summary: 'Synthèse des KPI exploitables directement depuis le dashboard PFE.',
-    kpis: [
-      ...safetyKpis.slice(0, 2),
-      ...planningKpis,
-      ...financeKpis,
-      {
-        label: 'Cadence',
-        value: 'Par OA',
-        detail: 'Graphiques disponibles pour OA41, OA44, OA48, OA54, OA56',
-        status: 'PARTIEL',
-      },
-    ],
-    table: {
-      columns: ['KPI', 'Objectif', 'Résultat', 'Statut'],
-      rows: [
-        ['Accidents', '0', '0', 'ATTEINT'],
-        ['Restitution voies', 'Sans pénalité', '5 / 5 OCP', 'ATTEINT'],
-        ['Gain financier', '> 19 848 €', '20 497,62 €', 'ATTEINT'],
-        ['Cadence démolition', 'Comparer théorie/réel', 'Graphiques par OA', 'PARTIEL'],
-      ],
-    },
-    analysis: [
-      'Les KPI sécurité, restitution et finance disposent d’une conclusion exploitable.',
-      'Les KPI cadence et durée doivent être centralisés en valeurs numériques pour produire des conclusions totalement automatiques par tâche.',
+    summary: 'Sélection des visuels les plus utiles pour vérifier les KPI finaux du projet.',
+    visuals: [
+      securityVisuals[0],
+      securityVisuals[1],
+      planningVisuals[0],
+      planningVisuals[3],
+      financeVisuals[0],
+      financeVisuals[2],
     ],
   },
   'capitalisation des enseignements': {
-    summary: 'Les graphes de durée par phase et de cadence constituent la base principale de capitalisation.',
-    table: {
-      columns: ['Source dashboard', 'Usage REX'],
-      rows: [
-        ['Durée par phase OA41 à OA56', 'Repérer les tâches plus longues ou plus rapides que prévu'],
-        ['Cadence démolition par OA', 'Réutiliser les rendements réels dans les futurs plannings OCP'],
-        ['Événements perturbateurs', 'Identifier les causes de perte de marge'],
-      ],
-    },
-    analysis: [
-      'Cette fiche doit servir de point d’entrée REX plutôt que de simple stockage documentaire.',
-      'Les écarts durée théorique/réelle doivent alimenter les futurs ratios de préparation.',
-    ],
+    summary: 'Graphiques détaillés de durée et de cadence, organisés par OA.',
+    groups: lessonsGroups,
   },
   'mise à jour des checklists': {
-    summary: 'Les écarts et événements du dashboard peuvent indiquer les contrôles à renforcer.',
-    table: {
-      columns: ['Constat dashboard', 'Évolution checklist possible'],
-      rows: [
-        ['Anomalies / mesures à prendre', 'Renforcer ou ajouter les points de contrôle concernés'],
-        ['Points d’arrêt GO/NO GO', 'Vérifier que chaque jalon critique est explicitement présent'],
-        ['Événements perturbateurs', 'Ajouter les vérifications préventives avant OCP'],
-      ],
-    },
-    analysis: [
-      'Les modifications de checklist doivent être décidées à partir des écarts récurrents, pas à partir d’une seule impression terrain.',
-    ],
+    summary: 'Visuels utiles pour repérer les contrôles à renforcer dans les futures checklists.',
+    visuals: [securityAnomaliesMesures, planningEvenementsRestitution].map((image, index) => ({
+      title: index === 0 ? 'Anomalies / Mesures à prendre' : 'Événements impactant la restitution',
+      image,
+      alt: index === 0 ? 'Visuel dashboard des anomalies et mesures à prendre' : 'Visuel dashboard des événements de restitution',
+    })),
   },
-  'mise à jour des procédures internes': {
-    summary: 'Les écarts récurrents peuvent justifier une évolution des méthodes internes.',
-    table: {
-      columns: ['Donnée à examiner', 'Décision possible'],
-      rows: [
-        ['GO / NO GO et points d’arrêt', 'Formaliser ou clarifier les critères de validation'],
-        ['Écarts de durée par tâche', 'Mettre à jour les méthodes et rendements théoriques'],
-        ['Événements perturbateurs', 'Prévoir une procédure de contournement ou de renfort'],
-      ],
-    },
-    analysis: [
-      'Aucune procédure ne doit être modifiée sans rattacher la décision à un écart ou à un événement observé.',
-    ],
+  'proposition d’actions préventives': {
+    summary: 'Visuels utiles pour relier les anomalies et événements à des actions préventives.',
+    visuals: [securityAnomaliesMesures, planningEvenementsRestitution].map((image, index) => ({
+      title: index === 0 ? 'Anomalies / Mesures à prendre' : 'Événements impactant la restitution',
+      image,
+      alt: index === 0 ? 'Visuel dashboard des anomalies et mesures à prendre' : 'Visuel dashboard des événements de restitution',
+    })),
   },
   "proposition d'actions préventives": {
-    summary: 'Les actions préventives doivent relier un constat à une conséquence puis à une action.',
-    table: {
-      columns: ['Constat', 'Conséquence', 'Action préventive possible'],
-      rows: [
-        ['Événement perturbateur', 'Marge de restitution réduite', 'Prévoir un scénario de secours dédié'],
-        ['Écart durée théorique/réelle', 'Planning minute moins fiable', 'Actualiser le rendement utilisé en préparation'],
-        ['Anomalie sécurité', 'Risque terrain accru', 'Renforcer le contrôle avant GO'],
-      ],
-    },
-    analysis: [
-      'Ces propositions restent à valider avec les données détaillées par OA lorsqu’elles seront structurées.',
-    ],
+    summary: 'Visuels utiles pour relier les anomalies et événements à des actions préventives.',
+    visuals: [securityAnomaliesMesures, planningEvenementsRestitution].map((image, index) => ({
+      title: index === 0 ? 'Anomalies / Mesures à prendre' : 'Événements impactant la restitution',
+      image,
+      alt: index === 0 ? 'Visuel dashboard des anomalies et mesures à prendre' : 'Visuel dashboard des événements de restitution',
+    })),
   },
 }
 

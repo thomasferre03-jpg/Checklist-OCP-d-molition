@@ -1,6 +1,7 @@
-import { BarChart3 } from 'lucide-react'
+import { BarChart3, ZoomIn, X } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
-import { getRexInsightForAction, type RexBarDatum, type RexKpi, type RexStatus } from '@/data/project-rex-data'
+import { getRexInsightForAction, type RexVisual } from '@/data/project-rex-data'
 import { cleanText } from '@/lib/text'
 import type { ChecklistItem } from '@/types/checklist'
 
@@ -8,57 +9,31 @@ interface RexInsightsProps {
   item: ChecklistItem
 }
 
-function statusLabel(status: RexStatus) {
-  if (status === 'NON_ATTEINT') {
-    return 'Non atteint'
-  }
-  if (status === 'NON_EVALUABLE') {
-    return 'Non évaluable'
-  }
-  if (status === 'PARTIEL') {
-    return 'Partiel'
-  }
-  return 'Atteint'
-}
-
-function KpiCard({ kpi }: { kpi: RexKpi }) {
+function RexVisualCard({ visual, onOpen }: { visual: RexVisual; onOpen: (visual: RexVisual) => void }) {
   return (
-    <article className="rex-kpi-card">
-      <div className="rex-kpi-head">
-        <span>{kpi.label}</span>
-        <strong className={`rex-status ${kpi.status.toLowerCase().replace('_', '-')}`}>
-          {statusLabel(kpi.status)}
-        </strong>
-      </div>
-      <div className="rex-kpi-value">{kpi.value}</div>
-      <p>{kpi.detail}</p>
-    </article>
-  )
-}
-
-function MiniBarChart({ data, unit }: { data: RexBarDatum[]; unit: string }) {
-  const max = Math.max(...data.map((datum) => datum.value), 1)
-
-  return (
-    <div className="rex-bars">
-      {data.map((datum) => (
-        <div className="rex-bar-row" key={datum.label}>
-          <span>{datum.label}</span>
-          <div className="rex-bar-track">
-            <i style={{ width: `${Math.max(4, (datum.value / max) * 100)}%` }} />
-          </div>
-          <strong>
-            {datum.value} {unit}
-          </strong>
-        </div>
-      ))}
-    </div>
+    <button className="rex-visual-card" type="button" onClick={() => onOpen(visual)}>
+      <span className="rex-visual-title">{visual.title}</span>
+      <img src={visual.image} alt={visual.alt} loading="lazy" />
+      <span className="rex-zoom-hint">
+        <ZoomIn size={14} /> Agrandir
+      </span>
+    </button>
   )
 }
 
 export function RexInsights({ item }: RexInsightsProps) {
   const isPh12 = cleanText(item.phase).startsWith('12.')
   const insight = getRexInsightForAction(cleanText(item.action))
+  const [lightboxVisual, setLightboxVisual] = useState<RexVisual | null>(null)
+  const [activeGroupLabel, setActiveGroupLabel] = useState<string | null>(null)
+
+  const activeGroup = useMemo(() => {
+    if (!insight?.groups?.length) {
+      return null
+    }
+
+    return insight.groups.find((group) => group.label === activeGroupLabel) ?? insight.groups[0]
+  }, [activeGroupLabel, insight?.groups])
 
   if (!isPh12) {
     return null
@@ -68,11 +43,9 @@ export function RexInsights({ item }: RexInsightsProps) {
     return (
       <section className="sheet-section ocp-sheet-section rex-insights">
         <h4>
-          <BarChart3 size={16} /> Résultats du projet
+          <BarChart3 size={16} /> Résultats / REX de l'opération
         </h4>
-        <div className="associated-empty">
-          Aucune donnée quantitative disponible dans le dashboard pour cet indicateur.
-        </div>
+        <div className="associated-empty">Aucun visuel dashboard pertinent pour cette fiche.</div>
       </section>
     )
   }
@@ -80,56 +53,52 @@ export function RexInsights({ item }: RexInsightsProps) {
   return (
     <section className="sheet-section ocp-sheet-section rex-insights">
       <h4>
-        <BarChart3 size={16} /> Résultats du projet
+        <BarChart3 size={16} /> Résultats / REX de l'opération
       </h4>
       <p className="rex-summary">{insight.summary}</p>
 
-      {insight.kpis?.length ? (
-        <div className="rex-kpi-grid">
-          {insight.kpis.map((kpi) => (
-            <KpiCard key={`${kpi.label}-${kpi.value}`} kpi={kpi} />
+      {insight.visuals?.length ? (
+        <div className="rex-visual-grid">
+          {insight.visuals.map((visual) => (
+            <RexVisualCard key={visual.title} visual={visual} onOpen={setLightboxVisual} />
           ))}
         </div>
       ) : null}
 
-      {insight.bars ? (
-        <div className="rex-block">
-          <h5>{insight.bars.title}</h5>
-          <MiniBarChart data={insight.bars.data} unit={insight.bars.unit} />
+      {insight.groups?.length && activeGroup ? (
+        <div className="rex-oa-analysis">
+          <div className="rex-tabs" aria-label="Choisir un ouvrage d'art">
+            {insight.groups.map((group) => (
+              <button
+                className={group.label === activeGroup.label ? 'active' : ''}
+                key={group.label}
+                type="button"
+                onClick={() => setActiveGroupLabel(group.label)}
+              >
+                {group.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="rex-visual-grid">
+            {activeGroup.visuals.map((visual) => (
+              <RexVisualCard key={visual.title} visual={visual} onOpen={setLightboxVisual} />
+            ))}
+          </div>
         </div>
       ) : null}
 
-      {insight.table ? (
-        <div className="rex-table-wrap">
-          <table className="rex-table">
-            <thead>
-              <tr>
-                {insight.table.columns.map((column) => (
-                  <th key={column}>{column}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {insight.table.rows.map((row) => (
-                <tr key={row.join('-')}>
-                  {row.map((cell) => (
-                    <td key={cell}>{cell}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {lightboxVisual ? (
+        <div className="rex-lightbox" role="dialog" aria-modal="true" aria-label={lightboxVisual.title}>
+          <button className="rex-lightbox-close" type="button" onClick={() => setLightboxVisual(null)}>
+            <X size={18} />
+          </button>
+          <figure>
+            <img src={lightboxVisual.image} alt={lightboxVisual.alt} />
+            <figcaption>{lightboxVisual.title}</figcaption>
+          </figure>
         </div>
       ) : null}
-
-      <div className="rex-block">
-        <h5>Analyse REX</h5>
-        <ul>
-          {insight.analysis.map((line) => (
-            <li key={line}>{line}</li>
-          ))}
-        </ul>
-      </div>
     </section>
   )
 }
