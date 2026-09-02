@@ -56,7 +56,7 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
                   {(['Fait', 'Pas fait'] as const).map((status) => (
                     <button
                       aria-pressed={entry.statut === status}
-                      className={entry.statut === status ? 'active' : ''}
+                      className={`${status === 'Fait' ? 'fait' : 'pasfait'}${entry.statut === status ? ' active' : ''}`}
                       key={status}
                       onClick={() => {
                         if (entry.statut !== status) {

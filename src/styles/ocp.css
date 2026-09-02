@@ -1293,7 +1293,7 @@ body {
 }
 
 .item-card.is-pasfait {
-  border-left-color: var(--ocp-blue);
+  border-left-color: var(--ocp-red);
 }
 
 .toggle-btn {
@@ -1308,15 +1308,15 @@ body {
 }
 
 .toggle-btn.fait {
-  border-color: #bcb6aa;
-  background: #fff;
-  color: var(--ocp-ink);
+  border-color: var(--ocp-green);
+  background: var(--ocp-green);
+  color: #fff;
 }
 
 .toggle-btn.pasfait {
-  border-color: #bcb6aa;
-  background: #fff;
-  color: var(--ocp-ink);
+  border-color: var(--ocp-red);
+  background: var(--ocp-red);
+  color: #fff;
 }
 
 .item-main .pk-id {
@@ -1494,8 +1494,15 @@ body {
 }
 
 .sheet-status-group button.active {
-  background: #0b2033;
   color: #fff;
+}
+
+.sheet-status-group button.fait.active {
+  background: var(--ocp-green);
+}
+
+.sheet-status-group button.pasfait.active {
+  background: var(--ocp-red);
 }
 
 .ocp-sheet-body {
@@ -1607,7 +1614,7 @@ body {
 }
 
 .checklist-table tr.is-pasfait {
-  border-left-color: var(--ocp-blue);
+  border-left-color: var(--ocp-red);
 }
 
 .checklist-table .status-col {
