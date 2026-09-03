@@ -2,6 +2,7 @@
 
 import { AssociatedResources } from '@/components/checklist/AssociatedResources'
 import { FieldRexNotes } from '@/components/checklist/FieldRexNotes'
+import { PlanningMinuteRexNotes } from '@/components/checklist/PlanningMinuteRexNotes'
 import { ProcedureRexNotes } from '@/components/checklist/ProcedureRexNotes'
 import { RexInsights } from '@/components/checklist/RexInsights'
 import { cleanText } from '@/lib/text'
@@ -94,6 +95,7 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
 
               <FieldRexNotes item={item} />
               <ProcedureRexNotes item={item} />
+              <PlanningMinuteRexNotes item={item} />
 
               <section className="sheet-section ocp-sheet-section">
                 <h4>
