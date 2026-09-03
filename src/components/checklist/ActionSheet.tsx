@@ -2,6 +2,7 @@
 
 import { AssociatedResources } from '@/components/checklist/AssociatedResources'
 import { FieldRexNotes } from '@/components/checklist/FieldRexNotes'
+import { ProcedureRexNotes } from '@/components/checklist/ProcedureRexNotes'
 import { RexInsights } from '@/components/checklist/RexInsights'
 import { cleanText } from '@/lib/text'
 import type { ChecklistItem, ChecklistItemState } from '@/types/checklist'
@@ -92,6 +93,7 @@ export function ActionSheet({ entry, item, onClose, onStatusChange }: ActionShee
               </section>
 
               <FieldRexNotes item={item} />
+              <ProcedureRexNotes item={item} />
 
               <section className="sheet-section ocp-sheet-section">
                 <h4>
