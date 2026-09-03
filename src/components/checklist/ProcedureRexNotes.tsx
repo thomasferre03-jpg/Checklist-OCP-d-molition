@@ -29,6 +29,11 @@ export function ProcedureRexNotes({ item }: ProcedureRexNotesProps) {
             </div>
             <h5>{entry.title}</h5>
             <p>{entry.text}</p>
+            {entry.image ? (
+              <figure className="procedure-rex-figure">
+                <img alt={`${entry.oa} - ${entry.title}`} src={entry.image} />
+              </figure>
+            ) : null}
             <small>Source : {entry.source}</small>
           </article>
         ))}

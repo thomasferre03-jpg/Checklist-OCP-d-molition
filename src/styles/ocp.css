@@ -913,6 +913,20 @@ body {
   line-height: 1.48;
 }
 
+.procedure-rex-figure {
+  margin: 10px 0;
+  border: 1px solid #d0c7b8;
+  background: #fff;
+  padding: 6px;
+}
+
+.procedure-rex-figure img {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
 .procedure-rex-card small {
   display: block;
   color: #5d6873;

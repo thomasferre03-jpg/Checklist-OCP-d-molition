@@ -1,3 +1,9 @@
+import oa41CinematiqueDemolition from '@/assets/procedure-rex/oa41-cinematique-demolition.png'
+import oa41PlanPhasage from '@/assets/procedure-rex/oa41-plan-phasage.png'
+import oa48ProtectionVoies from '@/assets/procedure-rex/oa48-protection-voies.png'
+import oa56CarottagesElingage from '@/assets/procedure-rex/oa56-carottages-elingage.png'
+import oa56LevageTablier from '@/assets/procedure-rex/oa56-levage-tablier.png'
+
 export type ProcedureRexType = 'Exigence / controle' | 'Methode / moyen' | 'REX / bonne pratique' | 'A verifier'
 
 export interface ProcedureRexEntry {
@@ -6,6 +12,7 @@ export interface ProcedureRexEntry {
   title: string
   text: string
   source: string
+  image?: string
 }
 
 function normalizeAction(value: string) {
@@ -56,6 +63,7 @@ const RAW_PROCEDURE_REX_BY_ACTION = {
       title: 'Decroutage avant week-end',
       text: "Le retrait de l'enrobe du tablier est realise avant week-end. Un geotextile est fixe sur les garde-corps pour eviter les chutes de materiaux sur voie.",
       source: 'Procedure demolition OA41, §4.1.2, page 16',
+      image: oa41PlanPhasage,
     },
     {
       oa: 'OA48',
@@ -95,6 +103,7 @@ const RAW_PROCEDURE_REX_BY_ACTION = {
       title: 'Protection renforcee pour circulation de pelle',
       text: "La protection associe geotextile, sacs de sable, polystyrene, toles de 30 mm au droit de la pelle 25T et contreplaque 22 mm pour faciliter le curage.",
       source: 'Procedure demolition OA48, §4.2.2, page 22',
+      image: oa48ProtectionVoies,
     },
     {
       oa: 'OA56',
@@ -150,6 +159,7 @@ const RAW_PROCEDURE_REX_BY_ACTION = {
       title: 'Levage du tablier a la pelle 50T',
       text: "La configuration indique une portee de 7,5 m, une hauteur de fleche de 6 m et un poids de tablier retenu de 6,3 t. L'adequation de levage doit etre verifiee avant execution.",
       source: 'Procedure demolition OA56, §4.1.4, pages 14-15',
+      image: oa56LevageTablier,
     },
     {
       oa: 'OA56',
@@ -157,6 +167,7 @@ const RAW_PROCEDURE_REX_BY_ACTION = {
       title: 'Elingage par carottages',
       text: "Des carottages sont realises dans le sol bois pour passer les elingues textiles en panier autour des poutres metalliques. Les travailleurs conservent les garde-corps et portent un harnais.",
       source: 'Procedure demolition OA56, §4.1.4, page 14',
+      image: oa56CarottagesElingage,
     },
   ],
   'Vérifier les effectifs': [
@@ -211,6 +222,7 @@ const RAW_PROCEDURE_REX_BY_ACTION = {
       title: 'Demolition mecanique du tablier aux cisailles',
       text: "Le tablier est demoli avec deux pelles 50T equipees de cisailles beton, positionnees rive gauche et rive droite. Le BRH est cite comme outil disponible mais la cisaille pilote la demolition du tablier.",
       source: 'Procedure demolition OA41, §4.2.3, page 20',
+      image: oa41CinematiqueDemolition,
     },
     {
       oa: 'OA48',
